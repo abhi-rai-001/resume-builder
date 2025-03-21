@@ -3,6 +3,8 @@ import { useState } from 'react';
 
 export default function ResumeForm({ resumeData, updateResumeData, onNext }) {
   const [activeSection, setActiveSection] = useState('personalInfo');
+  // State to handle mobile navigation menu
+  const [showNavMenu, setShowNavMenu] = useState(false);
 
   const handlePersonalInfoChange = (e) => {
     const { name, value } = e.target;
@@ -159,10 +161,72 @@ export default function ResumeForm({ resumeData, updateResumeData, onNext }) {
     });
   };
 
+  // Function to handle section navigation
+  const handleSectionChange = (section) => {
+    setActiveSection(section);
+    setShowNavMenu(false); // Close menu on section change
+  };
+
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
+    <div className="bg-white rounded-lg shadow-md p-3 sm:p-6">
       <div className="mb-6">
-        <div className="flex border-b border-gray-200 mb-4">
+        {/* Mobile Navigation Menu Button */}
+        <div className="md:hidden mb-4">
+          <button
+            className="flex items-center justify-between w-full bg-gray-50 p-3 rounded-lg border border-gray-200"
+            onClick={() => setShowNavMenu(!showNavMenu)}
+          >
+            <span className="font-medium">
+              {activeSection === 'personalInfo' && 'Personal Info'}
+              {activeSection === 'experience' && 'Experience'}
+              {activeSection === 'education' && 'Education'}
+              {activeSection === 'skills' && 'Skills'}
+              {activeSection === 'projects' && 'Projects'}
+            </span>
+            <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 transition-transform ${showNavMenu ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {/* Mobile Navigation Menu */}
+          {showNavMenu && (
+            <div className="bg-white border border-gray-200 rounded-lg mt-1 overflow-hidden shadow-lg absolute z-10 w-[calc(100%-1.5rem)] max-w-md">
+              <button
+                className={`w-full text-left py-3 px-4 ${activeSection === 'personalInfo' ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-50'}`}
+                onClick={() => handleSectionChange('personalInfo')}
+              >
+                Personal Info
+              </button>
+              <button
+                className={`w-full text-left py-3 px-4 ${activeSection === 'experience' ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-50'}`}
+                onClick={() => handleSectionChange('experience')}
+              >
+                Experience
+              </button>
+              <button
+                className={`w-full text-left py-3 px-4 ${activeSection === 'education' ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-50'}`}
+                onClick={() => handleSectionChange('education')}
+              >
+                Education
+              </button>
+              <button
+                className={`w-full text-left py-3 px-4 ${activeSection === 'skills' ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-50'}`}
+                onClick={() => handleSectionChange('skills')}
+              >
+                Skills
+              </button>
+              <button
+                className={`w-full text-left py-3 px-4 ${activeSection === 'projects' ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-50'}`}
+                onClick={() => handleSectionChange('projects')}
+              >
+                Projects
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Desktop Navigation Tabs */}
+        <div className="hidden md:flex flex-wrap border-b border-gray-200 mb-4">
           <button
             className={`py-2 px-4 font-medium ${activeSection === 'personalInfo' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500'}`}
             onClick={() => setActiveSection('personalInfo')}
@@ -198,7 +262,7 @@ export default function ResumeForm({ resumeData, updateResumeData, onNext }) {
         {activeSection === 'personalInfo' && (
           <div>
             <h3 className="text-xl font-medium mb-4">Personal Information</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-gray-700 mb-1">Full Name *</label>
                 <input
@@ -262,7 +326,7 @@ export default function ResumeForm({ resumeData, updateResumeData, onNext }) {
                   placeholder="https://linkedin.com/in/username"
                 />
               </div>
-              <div className="md:col-span-2">
+              <div className="sm:col-span-2">
                 <label className="block text-gray-700 mb-1">Website/Portfolio</label>
                 <input
                   type="url"
@@ -273,7 +337,7 @@ export default function ResumeForm({ resumeData, updateResumeData, onNext }) {
                   placeholder="https://yourwebsite.com"
                 />
               </div>
-              <div className="md:col-span-2">
+              <div className="sm:col-span-2">
                 <label className="block text-gray-700 mb-1">Professional Summary</label>
                 <textarea
                   value={resumeData.summary}
@@ -299,7 +363,7 @@ export default function ResumeForm({ resumeData, updateResumeData, onNext }) {
             </div>
             
             {resumeData.experience.map((exp, index) => (
-              <div key={exp.id} className="border border-gray-200 rounded p-4 mb-4">
+              <div key={exp.id} className="border border-gray-200 rounded p-3 sm:p-4 mb-4">
                 <div className="flex justify-between items-start mb-2">
                   <h4 className="font-medium">Experience {index + 1}</h4>
                   {resumeData.experience.length > 1 && (
@@ -312,7 +376,7 @@ export default function ResumeForm({ resumeData, updateResumeData, onNext }) {
                   )}
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-gray-700 mb-1">Company/Organization</label>
                     <input
@@ -351,7 +415,7 @@ export default function ResumeForm({ resumeData, updateResumeData, onNext }) {
                       placeholder="e.g., Present"
                     />
                   </div>
-                  <div className="md:col-span-2">
+                  <div className="sm:col-span-2">
                     <label className="block text-gray-700 mb-1">Description</label>
                     <textarea
                       value={exp.description}
@@ -379,7 +443,7 @@ export default function ResumeForm({ resumeData, updateResumeData, onNext }) {
             </div>
             
             {resumeData.education.map((edu, index) => (
-              <div key={edu.id} className="border border-gray-200 rounded p-4 mb-4">
+              <div key={edu.id} className="border border-gray-200 rounded p-3 sm:p-4 mb-4">
                 <div className="flex justify-between items-start mb-2">
                   <h4 className="font-medium">Education {index + 1}</h4>
                   {resumeData.education.length > 1 && (
@@ -392,7 +456,7 @@ export default function ResumeForm({ resumeData, updateResumeData, onNext }) {
                   )}
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-gray-700 mb-1">Institution</label>
                     <input
@@ -460,7 +524,7 @@ export default function ResumeForm({ resumeData, updateResumeData, onNext }) {
               </button>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {resumeData.skills.map((skill, index) => (
                 <div key={index} className="flex items-center">
                   <input
@@ -474,6 +538,7 @@ export default function ResumeForm({ resumeData, updateResumeData, onNext }) {
                     <button
                       onClick={() => removeSkill(index)}
                       className="ml-2 text-red-600 hover:text-red-800"
+                      aria-label="Remove skill"
                     >
                       ✕
                     </button>
@@ -497,7 +562,7 @@ export default function ResumeForm({ resumeData, updateResumeData, onNext }) {
             </div>
             
             {resumeData.projects.map((project, index) => (
-              <div key={project.id} className="border border-gray-200 rounded p-4 mb-4">
+              <div key={project.id} className="border border-gray-200 rounded p-3 sm:p-4 mb-4">
                 <div className="flex justify-between items-start mb-2">
                   <h4 className="font-medium">Project {index + 1}</h4>
                   {resumeData.projects.length > 1 && (
@@ -510,7 +575,7 @@ export default function ResumeForm({ resumeData, updateResumeData, onNext }) {
                   )}
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-gray-700 mb-1">Project Title</label>
                     <input
@@ -530,7 +595,7 @@ export default function ResumeForm({ resumeData, updateResumeData, onNext }) {
                       placeholder="e.g., React, Node.js, MongoDB"
                     />
                   </div>
-                  <div className="md:col-span-2">
+                  <div className="sm:col-span-2">
                     <label className="block text-gray-700 mb-1">Project Link (optional)</label>
                     <input
                       type="url"
@@ -540,7 +605,7 @@ export default function ResumeForm({ resumeData, updateResumeData, onNext }) {
                       placeholder="https://github.com/yourusername/project"
                     />
                   </div>
-                  <div className="md:col-span-2">
+                  <div className="sm:col-span-2">
                     <label className="block text-gray-700 mb-1">Description</label>
                     <textarea
                       value={project.description}
@@ -556,10 +621,10 @@ export default function ResumeForm({ resumeData, updateResumeData, onNext }) {
         )}
       </div>
 
-      <div className="text-right">
+      <div className="text-right mt-6">
         <button
           onClick={onNext}
-          className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded"
+          className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded"
         >
           Continue to Preview
         </button>
@@ -567,9 +632,3 @@ export default function ResumeForm({ resumeData, updateResumeData, onNext }) {
     </div>
   );
 }
-
-
-
-
-  
-  
